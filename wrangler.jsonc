@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "shomaj",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "keep_names": false,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    {
+      "pattern": "shomaj.sraboni.dev",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_API_URL": "https://api.shomaj.sraboni.dev",
+    "MONGODB_DB_NAME": "shomaj",
+    "BETTER_AUTH_URL": "https://shomaj.sraboni.dev"
+  }
+}
