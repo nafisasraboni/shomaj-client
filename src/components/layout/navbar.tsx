@@ -18,6 +18,13 @@ const links = [
   { href: "/about", label: "Our Mission" },
 ];
 
+const accountLinks = [
+  { href: "/events/create", label: "Create Event", icon: CalendarPlus },
+  { href: "/events/manage", label: "Manage Events", icon: ListChecks },
+  { href: "/joined-events", label: "Joined Events", icon: UsersRound },
+  { href: "/profile", label: "Profile", icon: UserRound },
+];
+
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -25,6 +32,7 @@ export function Navbar() {
   const { data: session, isPending } = useSession();
 
   async function handleLogout() {
+    setOpen(false);
     await signOut();
     toast.success("You have been logged out");
     router.push("/");
@@ -56,23 +64,19 @@ export function Navbar() {
           {!isPending && session && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
-                <button className="focus-ring flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] p-1 pr-3 shadow-sm hover:border-[var(--primary)]/45" title={session.user.name} aria-label={`Open ${session.user.name}'s menu`}>
+                <button className="group focus-ring relative flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] p-1 pr-3 shadow-sm hover:border-[var(--primary)]/45" aria-label={`Open ${session.user.name}'s menu`}>
                   {session.user.image ? <img src={session.user.image} alt={`${session.user.name}'s profile`} className="size-9 rounded-md object-cover" referrerPolicy="no-referrer" /> : <span className="grid size-9 place-items-center rounded-md bg-[var(--accent)] font-bold text-[var(--primary)]">{session.user.name?.charAt(0).toUpperCase()}</span>}
                   <ChevronDown size={15} />
+                  <span className="pointer-events-none absolute right-0 top-[calc(100%+0.5rem)] z-20 w-max max-w-56 translate-y-1 rounded-md bg-[var(--foreground)] px-3 py-1.5 text-xs font-semibold text-[var(--background)] opacity-0 shadow-md transition group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">{session.user.name}</span>
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Portal>
                 <DropdownMenu.Content align="end" sideOffset={8} className="z-[60] min-w-60 rounded-xl border border-[var(--border)] bg-[var(--card)] p-2 shadow-[var(--shadow-lift)]">
                   <div className="px-3 py-2"><p className="font-bold">{session.user.name}</p><p className="truncate text-xs text-[var(--muted-foreground)]">{session.user.email}</p></div>
                   <DropdownMenu.Separator className="my-2 h-px bg-[var(--border)]" />
-                  {[
-                    ["/events/create", "Create Event", CalendarPlus],
-                    ["/events/manage", "Manage Events", ListChecks],
-                    ["/joined-events", "Joined Events", UsersRound],
-                    ["/profile", "Profile", UserRound],
-                  ].map(([href, label, Icon]) => (
-                    <DropdownMenu.Item key={String(href)} asChild>
-                      <Link href={String(href)} className="flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-semibold outline-none hover:bg-[var(--muted)] focus:bg-[var(--muted)]"><Icon size={17} />{String(label)}</Link>
+                  {accountLinks.map(({ href, label, icon: Icon }) => (
+                    <DropdownMenu.Item key={href} asChild>
+                      <Link href={href} className="flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-semibold outline-none hover:bg-[var(--muted)] focus:bg-[var(--muted)]"><Icon size={17} />{label}</Link>
                     </DropdownMenu.Item>
                   ))}
                   <DropdownMenu.Separator className="my-2 h-px bg-[var(--border)]" />
@@ -102,9 +106,8 @@ export function Navbar() {
             <div>
               <p className="mb-2 text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">{session ? "Your account" : "Take part"}</p>
               <div className="grid gap-1">
-                {session && [
-                  ["/events/create", "Create Event"], ["/events/manage", "Manage Events"], ["/joined-events", "Joined Events"], ["/profile", "Profile"],
-                ].map(([href, label]) => <Link key={href} href={href} onClick={() => setOpen(false)} className="focus-ring rounded-lg px-3 py-3 font-semibold hover:bg-[var(--muted)]">{label}</Link>)}
+                {session && <div className="mb-2 flex items-center gap-3 rounded-xl bg-[var(--muted)] p-3"><span className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--accent)] font-bold text-[var(--primary)]">{session.user.image ? <img src={session.user.image} alt="" className="size-full object-cover" referrerPolicy="no-referrer" /> : session.user.name?.charAt(0).toUpperCase()}</span><span className="min-w-0"><span className="block truncate text-sm font-bold">{session.user.name}</span><span className="block truncate text-xs text-[var(--muted-foreground)]">{session.user.email}</span></span></div>}
+                {session && accountLinks.map(({ href, label, icon: Icon }) => <Link key={href} href={href} onClick={() => setOpen(false)} className="focus-ring flex items-center gap-3 rounded-lg px-3 py-3 font-semibold hover:bg-[var(--muted)]"><Icon size={17} />{label}</Link>)}
                 {!isPending && !session && <Button asChild className="mt-2"><Link href="/login" onClick={() => setOpen(false)}>Log in to Shomaj</Link></Button>}
                 {session && <Button variant="outline" className="mt-2" onClick={handleLogout}><LogOut size={17} />Log out</Button>}
               </div>
