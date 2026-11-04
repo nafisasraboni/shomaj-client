@@ -3,11 +3,24 @@ import { ArrowUpRight, Facebook, Instagram, Linkedin, MapPin } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 
-const footerLinks = [
-  { href: "/events", label: "Upcoming events" },
-  { href: "/events/create", label: "Create an event" },
-  { href: "/about", label: "Our mission" },
-  { href: "/profile", label: "Your profile" },
+const footerSections = [
+  {
+    title: "Explore",
+    links: [
+      { href: "/events", label: "Upcoming events" },
+      { href: "/events/create", label: "Create an event" },
+      { href: "/joined-events", label: "Joined events" },
+      { href: "/profile", label: "Your profile" },
+    ],
+  },
+  {
+    title: "About",
+    links: [
+      { href: "/about", label: "Our mission" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -17,18 +30,20 @@ export function Footer() {
         <div><p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#91cdb9]">Ready when you are</p><p className="display-title mt-3 max-w-2xl text-2xl leading-tight sm:text-3xl lg:text-4xl">Find one useful thing to do nearby.</p></div>
         <Button asChild variant="secondary" className="shrink-0 border-0 shadow-none"><Link href="/events">Browse upcoming events <ArrowUpRight size={17} /></Link></Button>
       </div>
-      <div className="container-shell grid gap-10 py-12 sm:grid-cols-2 md:grid-cols-[1.35fr_0.65fr_0.65fr] lg:py-14">
+      <div className="container-shell grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.35fr_0.55fr_0.55fr_0.65fr] lg:py-14">
         <div className="max-w-md">
           <Logo className="[--muted-foreground:#aab9b3] [--primary:#f4f0e7] [--primary-foreground:#10251f]" />
           <p className="mt-6 text-base leading-8 text-[#b9c5c0] sm:text-lg">A public square for people who believe their neighbourhood can be better—and are ready to help make it happen.</p>
           <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#88a198]"><MapPin size={16} />Built for communities across Bangladesh</p>
         </div>
-        <div>
-          <h2 className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#8fa39b]">Explore</h2>
-          <ul className="mt-6 grid gap-3 text-sm text-[#d7dfdb]">
-            {footerLinks.map((link) => <li key={link.href}><Link className="hover:text-[var(--secondary)]" href={link.href}>{link.label}</Link></li>)}
-          </ul>
-        </div>
+        {footerSections.map((section) => (
+          <nav key={section.title} aria-label={`${section.title} links`}>
+            <h2 className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#8fa39b]">{section.title}</h2>
+            <ul className="mt-6 grid gap-3 text-sm text-[#d7dfdb]">
+              {section.links.map((link) => <li key={link.href}><Link className="hover:text-[var(--secondary)]" href={link.href}>{link.label}</Link></li>)}
+            </ul>
+          </nav>
+        ))}
         <div>
           <h2 className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#8fa39b]">Follow the work</h2>
           <div className="mt-5 flex gap-2">
@@ -42,7 +57,7 @@ export function Footer() {
       <div className="border-t border-white/15 py-5 text-xs tracking-wide text-[#8fa39b]">
         <div className="container-shell flex flex-col justify-between gap-3 text-center sm:flex-row sm:text-left">
           <span>© {new Date().getFullYear()} Shomaj · Built in Bangladesh for every neighbourhood.</span>
-          <span className="flex gap-5"><Link href="/privacy" className="hover:text-[#f4f0e7]">Privacy</Link><Link href="/terms" className="hover:text-[#f4f0e7]">Terms</Link></span>
+          <span>Community action, made local.</span>
         </div>
       </div>
     </footer>
